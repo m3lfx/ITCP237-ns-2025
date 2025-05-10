@@ -69,7 +69,7 @@ class CustomerController extends Controller
     public function update(Request $request, string $id)
     {
         $customer = Customer::find($id);
-        
+
         $user = User::where('id', $customer->user_id)->first();
         // dd($request->fname);
         $user->name = $request->fname . ' ' . $request->lname;
@@ -105,6 +105,10 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        $customer = Customer::find($id)->first();
+        Customer::destroy($id);
+        User::where('id', $customer->user_id)->delete();
+        return response()->json(['message' => 'customer deleted']);
     }
 }
