@@ -47,7 +47,8 @@ class ItemController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $item = Item::where('item_id', $id)->first();
+        return response()->json($item);
     }
 
     /**
@@ -55,7 +56,23 @@ class ItemController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $item = Item::find($id);
+        // dd($request->all(), $id);
+        $item->description = $request->description;
+        $item->sell_price = $request->sell_price;
+        $item->cost_price = $request->cost_price;
+        // $item->image_path = 'default.jpg';
+        $files = $request->file('uploads');
+        $item->image = 'storage/images/' . $files->getClientOriginalName();
+        $item->save();
+
+        $stock = Stock::find($id);
+        $stock->item_id = $item->item_id;
+        $stock->quantity = $request->quantity;
+        $stock->save();
+
+        Storage::put('public/images/' . $files->getClientOriginalName(), file_get_contents($files));
+        return response()->json(["success" => "item updated successfully.", "item" => $item, "status" => 200]);
     }
 
     /**
