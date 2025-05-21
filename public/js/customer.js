@@ -26,4 +26,43 @@ $(document).ready(function () {
         }
     });
 
+    $("#customerSubmit").on('click', function (e) {
+        e.preventDefault();
+        var data = $('#cform')[0];
+        console.log(data);
+        let formData = new FormData(data);
+        console.log(formData);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        
+        $.ajax({
+            method: "POST",
+            url: "/api/customers",
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $("#customerModal").modal("hide");
+                var img = "<img src=" + data.customer.image_path + " width='200px', height='200px'/>";
+                var tr = $("<tr></tr>");
+                tr.append($("<td>").html(data.customer.customer_id));
+                tr.append($("<td>").html(img));
+                tr.append($("<td>").html(data.customer.lname));
+                tr.append($("<td>").html(data.customer.fname));
+                tr.append($("<td>").html(data.customer.addressline));
+                tr.append("<td align='center'><a href='#' data-toggle='modal' data-target='#customerModal' id='editbtn' data-id=" + data.customer.customer_id + "><i class='fas fa-edit' aria-hidden='true' style='font-size:24px' ></a></i></td>");
+                tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.customer.customer_id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
+                $("#cbody").prepend(tr).fadeIn('slow');
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
 })
