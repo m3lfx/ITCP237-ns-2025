@@ -80,6 +80,13 @@ class ItemController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (Item::find($id)) {
+            Stock::destroy($id);
+            Item::destroy($id);
+            $data = array('success' => 'item deleted', 'code' => 200);
+            return response()->json($data);
+        }
+        $data = array('error' => 'item not deleted', 'code' => 400);
+        return response()->json($data);
     }
 }
