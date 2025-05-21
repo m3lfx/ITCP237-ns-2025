@@ -3,14 +3,7 @@
     <div id="items" class="container">
         <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#customerModal">add<span
             class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-        {{-- @include('layouts.flash-messages') --}}
-        {{-- <a class="btn btn-primary" href="{{ route('items.create') }}" role="button">add</a> --}}
-        {{-- <form method="POST" enctype="multipart/form-data" action="{{ route('item-import') }}">
-            {{ csrf_field() }}
-            <input type="file" id="uploadName" name="item_upload" required>
-            <button type="submit" class="btn btn-info btn-primary ">Import Excel File</button>
-
-        </form> --}}
+       
         <div class="card-body" style="height: 210px;">
             <input type="text" id='itemSearch' placeholder="--search--">
         </div>
