@@ -96,4 +96,47 @@ $(document).ready(function () {
         });
     });
 
+    $('#ctable tbody').on('click', 'a.deletebtn', function (e) {
+
+        var id = $(this).data('id');
+        var $row = $(this).closest('tr');
+        console.log(id);
+        // console.log(table);
+        e.preventDefault();
+        bootbox.confirm({
+            message: "do you want to delete this customer",
+            buttons: {
+                confirm: {
+                    label: 'yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'no',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                console.log(result);
+                if (result)
+                    $.ajax({
+                        method: "DELETE",
+                        url: `/api/customers/${id}`,
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data);
+                            $row.fadeOut(4000, function () {
+                                $row.remove()
+                            });
+
+                            bootbox.alert(data.message);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+            }
+        });
+    });
+
 })
