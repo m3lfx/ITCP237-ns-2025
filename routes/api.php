@@ -20,6 +20,7 @@ Route::apiResource('customers', CustomerController::class);
 Route::apiResource('items', ItemController::class);
 Route::get('/dashboard/address-chart',[DashboardController::class, 'addressChart']);
 Route::get('/dashboard/sales-chart',[DashboardController::class, 'salesChart' ]);
+Route::get('/dashboard/items-chart',[DashboardController::class, 'itemsChart']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
