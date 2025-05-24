@@ -20,4 +20,23 @@ class DashboardController extends Controller
         // dd($customer, $data, $labels);
         return response()->json(array('data' => $data, 'labels' => $labels));
     }
+
+    public function salesChart()
+    {
+
+        $sales = DB::table('item as i')
+            ->join('orderline as ol', 'i.item_id', '=', 'ol.item_id')
+            ->join('orderinfo as oi', 'ol.orderinfo_id', '=', 'oi.orderinfo_id')
+            ->select(DB::raw('monthname(oi.date_placed) as month, sum(ol.quantity * i.sell_price) as total'))
+            ->groupBy('oi.date_placed')
+            ->pluck('total', 'month')
+            ->all();
+
+        // dd($sales);
+        $labels = (array_keys($sales));
+
+        $data = array_values($sales);
+        // dd($sales, $data, $labels);
+        return response()->json(array('data' => $data, 'labels' => $labels));
+    }
 }
