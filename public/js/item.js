@@ -66,7 +66,7 @@ $(document).ready(function () {
                 console.log(data);
                 $("#itemModal").modal("hide");
                 var $itable = $('#itable').DataTable();
-                // $itable.row.add(data.results).draw(false);
+              
                 $itable.ajax.reload()
             },
             error: function (error) {
@@ -114,7 +114,7 @@ $(document).ready(function () {
         var id = $('#itemId').val();
         console.log(id);
         var table = $('#itable').DataTable();
-        // var cRow = $("tr td:eq(" + id + ")").closest('tr');
+        
         var data = $('#iform')[0];
         let formData = new FormData(data);
         formData.append("_method", "PUT")
@@ -130,13 +130,54 @@ $(document).ready(function () {
             success: function (data) {
                 console.log(data);
                 $('#itemModal').modal("hide");
-
                 table.ajax.reload()
-
+                 
             },
             error: function (error) {
                 console.log(error);
             }
         });
     });
+
+    $('#itable tbody').on('click', 'a.deletebtn', function (e) {
+        e.preventDefault();
+        var table = $('#itable').DataTable();
+        var id = $(this).data('id');
+        var $row = $(this).closest('tr');
+        console.log(id);
+        bootbox.confirm({
+            message: "do you want to delete this item",
+            buttons: {
+                confirm: {
+                    label: 'yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'no',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                console.log(result);
+                if (result)
+                    $.ajax({
+                        method: "DELETE",
+                        url: `http://localhost:8000/api/items/${id}`,
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data);
+                            $row.fadeOut(4000, function () {
+                                table.row($row).remove().draw();
+                            });
+
+                            bootbox.alert(data.success);
+                        },
+                        error: function (error) {
+                            bootbox.alert(data.error);
+                        }
+                    });
+            }
+        });
+    })
 })
