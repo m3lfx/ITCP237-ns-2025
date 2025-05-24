@@ -74,4 +74,38 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#itable tbody').on('click', 'a.editBtn', function (e) {
+        e.preventDefault();
+        $('#itemImage').remove()
+        $('#itemId').remove()
+        $("#iform").trigger("reset");
+        // var id = $(e.relatedTarget).attr('data-id');
+        
+        var id = $(this).data('id');
+        console.log(id);
+        $('<input>').attr({ type: 'hidden', id: 'itemId', name: 'item_id', value: id }).appendTo('#iform');
+        $('#itemModal').modal('show');
+        $('#itemSubmit').hide()
+        $('#itemUpdate').show()
+
+        $.ajax({
+            method: "GET",
+            url: `http://localhost:8000/api/items/${id}`,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $('#desc').val(data.description)
+                $('#sell').val(data.sell_price)
+                $('#cost').val(data.cost_price)
+                $('#qty').val(data.stock.quantity)
+                $("#iform").append(`<img src=" ${data.image}" width='200px', height='200px' id="itemImage"   />`)
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
 })
