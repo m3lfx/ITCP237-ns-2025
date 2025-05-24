@@ -84,8 +84,9 @@ $(document).ready(function () {
         
         var id = $(this).data('id');
         console.log(id);
-        $('<input>').attr({ type: 'hidden', id: 'itemId', name: 'item_id', value: id }).appendTo('#iform');
         $('#itemModal').modal('show');
+        $('<input>').attr({ type: 'hidden', id: 'itemId', name: 'item_id', value: id }).appendTo('#iform');
+        
         $('#itemSubmit').hide()
         $('#itemUpdate').show()
 
@@ -101,6 +102,36 @@ $(document).ready(function () {
                 $('#cost').val(data.cost_price)
                 $('#qty').val(data.stock.quantity)
                 $("#iform").append(`<img src=" ${data.image}" width='200px', height='200px' id="itemImage"   />`)
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+    $("#itemUpdate").on('click', function (e) {
+        e.preventDefault();
+        var id = $('#itemId').val();
+        console.log(id);
+        var table = $('#itable').DataTable();
+        // var cRow = $("tr td:eq(" + id + ")").closest('tr');
+        var data = $('#iform')[0];
+        let formData = new FormData(data);
+        formData.append("_method", "PUT")
+      
+        $.ajax({
+            method: "POST",
+            url: `http://localhost:8000/api/items/${id}`,
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $('#itemModal').modal("hide");
+
+                table.ajax.reload()
 
             },
             error: function (error) {
