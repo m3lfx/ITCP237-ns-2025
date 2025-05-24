@@ -14,7 +14,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::withWhereHas('stock')->get();
+        $items = Item::withWhereHas('stock')->orderBy('item_id', 'DESC')->get();
 
         return response()->json($items);
     }

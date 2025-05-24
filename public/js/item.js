@@ -1,5 +1,5 @@
 $(document).ready(function () {
- 
+
     $('#itable').DataTable({
         ajax: {
             url: "/api/items",
@@ -20,14 +20,15 @@ $(document).ready(function () {
                 }
             }
         ],
+        order: [[0, 'desc']],
         columns: [
             { data: 'item_id' },
             {
                 data: null,
                 render: function (data, type, row) {
-                    console.log(data.img_path)
+                    console.log(data.image_path)
                     // return `<img src="/storage/${data.img_path}"  width="50" height="60">`; 
-                    return `<img src=${data.image_path}  width="50" height="60">`;
+                    return `<img src=${data.image}  width="50" height="60">`;
                 }
             },
 
@@ -42,5 +43,35 @@ $(document).ready(function () {
                 }
             }
         ],
+    });
+
+    $("#itemSubmit").on('click', function (e) {
+        e.preventDefault();
+        var data = $('#iform')[0];
+        console.log(data);
+        let formData = new FormData(data);
+        console.log(formData);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        $.ajax({
+            method: "POST",
+            url: "/api/items",
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $("#itemModal").modal("hide");
+                var $itable = $('#itable').DataTable();
+                // $itable.row.add(data.results).draw(false);
+                $itable.ajax.reload()
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
     });
 })
