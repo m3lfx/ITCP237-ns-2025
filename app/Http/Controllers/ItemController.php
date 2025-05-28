@@ -7,6 +7,11 @@ use App\Models\Item;
 use App\Models\Stock;
 use Storage;
 use Illuminate\Support\Carbon;
+use App\Models\Customer;
+use App\Models\Order;
+use DB;
+
+
 
 class ItemController extends Controller
 {
@@ -91,12 +96,15 @@ class ItemController extends Controller
         return response()->json($data);
     }
 
-    public function postCheckout(Request $request){
-    //    dd($request->getContent());
-        $items = json_decode($request->getContent(), true);
+    public function postCheckout(Request $request)
+    {
+        //    dd($request->getContent());
+        // dd($request->all());
+        // $items = json_decode($request->getContent(), true);
         // dd($items);
+        $items = $request->all();
         try {
-            
+
             DB::beginTransaction();
             // dd(Auth::id());
             // $customer =  Customer::where('user_id', Auth::id())->first();
@@ -104,13 +112,13 @@ class ItemController extends Controller
             $order = new Order();
             // $order->customer_id = $customer->customer_id;
             // $order->date_placed = now();
-            $customer = Customer::find(3);
+            $customer = Customer::find(5);
             $order->date_placed = Carbon::now();
             $order->date_shipped = Carbon::now();
             $order->shipping = 10.00;
             $order->status = 'Processing';
             // $order->save();
-            // $order->customer()->;
+            // $order->customer_id = $customer->customer_id;
             $customer->orders()->save($order);
             // dd($customer->orders());
             foreach ($items as $item) {
@@ -121,14 +129,13 @@ class ItemController extends Controller
                         'quantity' => $item['quantity'],
                         'item_id' => $item['item_id'],
                     ]);
-               
+
                 $stock = Stock::find($item['item_id']);
                 $stock->quantity = $stock->quantity - $item['quantity'];
                 $stock->save();
             }
             // dd($order);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             // dd($e);
             DB::rollback();
             return response()->json([
@@ -136,10 +143,13 @@ class ItemController extends Controller
                 'code' => 409,
                 'error' => $e->getMessage(),
             ]);
-            // return redirect()->route('shoppingCart')->with('error', $e->getMessage());
-       }
+            return response()->json([
+                'status' => 'Order Failed',
+                'code' => 409,
+            ]);
+        }
         DB::commit();
-     
+
         return response()->json([
             'status' => 'Order Success',
             'code' => 200,

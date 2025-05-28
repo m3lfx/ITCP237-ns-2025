@@ -81,8 +81,8 @@ $(document).ready(function () {
 			itemid = parseInt($(element).find($(".itemId")).html());
 			items.push(
 				{
-					"item_id": itemid,
-					"quantity": qty
+					item_id: itemid,
+					quantity: qty
 				}
 			);
 		});
@@ -93,7 +93,7 @@ $(document).ready(function () {
 		$.ajax({
 			type: "POST",
 			url: "/api/items/checkout",
-			data: data,
+			data: items,
 			
 			dataType: "json",
 			processData: false,
