@@ -1,9 +1,11 @@
 $(document).ready(function () {
+    const access_token = localStorage.getItem('token')
 
     $('#itable').DataTable({
         ajax: {
             url: "/api/items",
             dataSrc: ""
+            
         },
         dom: 'Bfrtip',
         buttons: [

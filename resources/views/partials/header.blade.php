@@ -39,7 +39,7 @@
                          {{-- <a class="dropdown-item" href="{{ route('user.register') }}">Signup </a>
                         <a class="dropdown-item" href="{{ route('user.login') }}">Signin </a>  --}}
                         <a class="dropdown-item" href="#">Signup </a>
-                        <a class="dropdown-item" href="#}">Signin </a>
+                        <a class="dropdown-item" href="#">Signin </a>
                     @endif
                 </div>
     </div>
@@ -60,4 +60,5 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> 
         </form>
     </div>
+    
 </nav>
