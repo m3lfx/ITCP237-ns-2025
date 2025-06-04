@@ -25,6 +25,13 @@ class ItemController extends Controller
         return response()->json($items);
     }
 
+    public function getItems()
+    {
+        $items = Item::withWhereHas('stock')->orderBy('item_id', 'DESC')->get();
+
+        return response()->json($items);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -102,7 +109,7 @@ class ItemController extends Controller
         // dd($request->all());
         // $items = json_decode($request->getContent(), true);
         // dd($items);
-        $items = $request->all();
+        $items = $request->input();
         try {
 
             DB::beginTransaction();

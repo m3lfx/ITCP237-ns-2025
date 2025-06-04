@@ -110,7 +110,7 @@ $(document).ready(function () {
             console.log(data);
             var ctx = $("#itemsChart");
              new Chart(ctx, {
-                type: 'doughnut',
+                type: 'pie',
                 data: {
                     labels: data.labels,
                     datasets: [{

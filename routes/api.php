@@ -24,6 +24,7 @@ Route::post('/items/checkout', [ItemController::class, 'postCheckout'])->name('p
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/item-all', [ItemController::class, 'getItems']);
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('customers', CustomerController::class);
     Route::apiResource('items', ItemController::class);
