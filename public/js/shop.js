@@ -2,6 +2,14 @@ var itemCount = 0;
 var priceTotal = 0;
 var quantity = 0;
 var clone = "";
+
+const getCart = () => {
+    let cart = localStorage.getItem('cart');
+    return cart ? JSON.parse(cart) : [];
+}
+const saveCart = (cart) => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
 $(document).ready(function () {
 
 	// $.ajax({
@@ -49,6 +57,7 @@ $(document).ready(function () {
 				row.append(item);
 
 			});
+
 			$(".show-details").on('click', function () {
 				// Get product data from button attributes
 				const id = $(this).data('id');
@@ -78,12 +87,10 @@ $(document).ready(function () {
 				// Remove any existing overlay and append new one
 				$("#productDetailsOverlay").remove();
 				$("body").append(detailsHtml);
-
-
-
+				$("#closeProductDetails").on('click', function () {
+					$("#productDetailsOverlay").remove();
+				});
 			});
-
-
 		},
 		error: function () {
 			console.log('AJAX load did not work');
@@ -180,4 +187,39 @@ $(document).ready(function () {
 		// console.log(clone.find(".itemDetails"));
 
 	});
+
+	$(document).on('click', '#detailsAddToCart', function () {
+		const qty = parseInt($("#detailsQty").val());
+		const id = $("#detailsItemId").val();
+		const description = $("#productDetails h5").text();
+		const price = $("#productDetails strong").text().replace(/[^\d.]/g, '');
+		const image = $("#productDetails img").attr('src');
+		const stock = parseInt($("#productDetails p:contains('Stock')").text().replace(/[^\d]/g, ''));
+		let cart = getCart();
+
+		let existing = cart.find(item => item.item_id == id);
+		if (existing) {
+			existing.quantity += qty;
+		} else {
+			cart.push({
+				item_id: id,
+				description: description,
+				price: parseFloat(price),
+				image: image,
+				stock: stock,
+				quantity: qty
+			});
+		}
+		saveCart(cart);
+		$("#productDetailsOverlay").remove();
+		itemCount++;
+		$('#itemCount').text(itemCount).css('display', 'block');
+
+
+		console.log(cart)
+
+
+	});
+
+
 })
