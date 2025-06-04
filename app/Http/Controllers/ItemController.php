@@ -109,7 +109,10 @@ class ItemController extends Controller
         // dd($request->all());
         // $items = json_decode($request->getContent(), true);
         // dd($items);
-        $items = $request->input();
+        // $items = $request->input();
+        $items = $request->json()->all();
+        //  ->all();
+        // dd($items);
         try {
 
             DB::beginTransaction();

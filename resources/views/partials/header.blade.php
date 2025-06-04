@@ -45,7 +45,7 @@
     </div>
     </li>
     <li class="nav-link">
-         <a href="#"> 
+         <a href="{{url('/cart')}}"> 
             <i class="fa fa-shopping-cart" aria-hidden="true"></i> Shopping Cart
            
             <span class="badge badge-secondary itemCount"></span>
